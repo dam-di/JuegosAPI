@@ -22,16 +22,35 @@ class DBHandler(object):
         return db
 
 
+    def obtenerProveedores(self):
+        response = ResponseModel()
+        try:
+            self.collection = self.db.get_collection('proveedores')
+            listaProveedores = []
+            coleccion = self.collection.find({})
+            for juego in coleccion:
+                listaProveedores.append(juego)
+
+            response.resultOk = True
+            response.data = str(listaProveedores)
+
+        except Exception as e:
+            print(e)
+
+        return response
+
+
+
     #######################################
-    #ESTUDIANTES
-    def eliminarEstudiante(self,_idE):
+    #JUEGOS
+    def eliminarJuego(self,_idE):
         response = ResponseModel()
 
         try:
-            self.collection = self.db.get_collection('estudiantes')
+            self.collection = self.db.get_collection('juegos')
             self.collection.delete_one({'_id':_idE})
             response.resultOk = True
-            response.data = 'Estudiante eliminado con exito'
+            response.data = 'Juego eliminado con exito'
         except Exception as e:
             print(e)
 
@@ -50,15 +69,15 @@ class DBHandler(object):
         return response
 
 
-    def actualizar(self, estudiante):
+    def actualizarJuego(self, juego):
         response = ResponseModel()
-        print(estudiante['Nombre'])
+        print(juego['_id'])
 
         try:
-            self.collection = self.db.get_collection('estudiantes')
-            self.collection.update_one({'_id':estudiante['_id']},{'$set':estudiante})
+            self.collection = self.db.get_collection('juegos')
+            self.collection.update_one({'_id':juego['_id']},{'$set':juego})
             response.resultOk = True
-            response.data = 'Estudiante actualizado con exito'
+            response.data = 'Juego actualizado con exito'
         except Exception as e:
             print(e)
 

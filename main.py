@@ -30,6 +30,55 @@ def checkTokenAuth(tokenSHA256Request, USER, route):
         return False
 
 
+##################################################################
+#   PROVEEDORES
+##################################################################
+
+@app.route('/proveedores', methods=['POST','PUT','DELETE','GET'])
+def proveedores():
+    print(request.json)
+    response = ResponseModel()
+    tokenSHA256Request = request.authorization['password']
+    user = request.authorization['username']
+    route = request.json['route']
+
+    if checkTokenAuth(tokenSHA256Request, user, route):
+        try:
+            if request.method == 'POST':
+                pass
+                #response = insertarJuego(request.json['data'])
+            elif request.method == 'GET':
+                response = obtenerProveedores(request.json['data'])
+            elif request.method == 'PUT':
+                pass
+                #response = updateJuego(request.json['data'])
+            elif request.method == 'DELETE':
+                pass
+                #response = deleteJuego(request.json['data'])
+
+
+        except Exception as e:
+            print(e)
+    else:
+        response.data = 'NO TIENES ACCESO'
+
+    return json.dumps(response.__dict__)
+
+def obtenerProveedores(_idP):
+    if _idP == 'all':
+        response = DBHandler().obtenerProveedores()
+    else:
+        pass
+        #response = DBHandler().obtenerEstudiante(_idP)
+
+    return response
+
+
+
+
+##################################################################
+#   JUEGOS
+##################################################################
 
 
 @app.route('/juegos', methods=['POST','PUT','DELETE','GET'])
@@ -47,11 +96,10 @@ def juegos():
             elif request.method == 'GET':
                 response = obtenerJuegos(request.json['data'])
             elif request.method == 'PUT':
-                #response = updateStudent(request.json['data'])
-                pass
+                response = updateJuego(request.json['data'])
             elif request.method == 'DELETE':
-                pass
-                #response = deleteStudent(request.json['data'])
+
+                response = deleteJuego(request.json['data'])
 
 
         except Exception as e:
@@ -62,13 +110,13 @@ def juegos():
     return json.dumps(response.__dict__)
 
 
-def deleteStudent(_idE):
-    response = DBHandler().eliminarEstudiante(_idE)
+def deleteJuego(_idE):
+    response = DBHandler().eliminarJuego(_idE)
     return response
 
 
-def updateStudent(estudiante):
-    response = DBHandler().actualizar(estudiante)
+def updateJuego(juego):
+    response = DBHandler().actualizarJuego(juego)
     return response
 
 def obtenerJuegos(_idJ):
